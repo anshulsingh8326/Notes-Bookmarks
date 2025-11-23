@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FusionFlow | Pro</title>
+    <title>FusionFlow | Workspace</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap"
         rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,17 +18,19 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    },
                     colors: {
-                        bg: '#09090b',        // Zinc 950
-                        sidebar: '#121215',   // Zinc 925 (Custom)
-                        card: '#18181b',      // Zinc 900
-                        border: '#27272a',    // Zinc 800
-                        hover: '#27272a',
-                        accent: '#6366f1',    // Indigo 500
-                        accentHover: '#4f46e5',
-                        textMain: '#f4f4f5',  // Zinc 100
-                        textMuted: '#a1a1aa'  // Zinc 400
+                        bg: '#202023',
+                        sidebar: '#18181b',
+                        card: '#27272a',
+                        border: '#3f3f46',
+                        accent: '#818cf8',
+                        accentHover: '#6366f1',
+                        textMain: '#f4f4f5',
+                        textMuted: '#a1a1aa'
                     }
                 }
             }
@@ -43,120 +46,117 @@
         /* --- Base --- */
         body {
             -webkit-tap-highlight-color: transparent;
+            overscroll-behavior: none;
         }
 
-        /* --- Scrollbar --- */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 10px;
+            height: 10px;
         }
 
         ::-webkit-scrollbar-track {
-            background: transparent;
+            background: #18181b;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #27272a;
-            border-radius: 10px;
+            background: #52525b;
+            border: 2px solid #18181b;
+            border-radius: 99px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #3f3f46;
-        }
-
-        /* --- Editor Customization --- */
+        /* --- Editor Styling --- */
         .EasyMDEContainer {
-            background: transparent;
-            border: none;
-            height: 100%;
             display: flex;
             flex-direction: column;
+            height: 100%;
+            background: transparent;
         }
 
         .editor-toolbar {
-            background: #09090b;
+            flex-shrink: 0;
+            background: #202023;
             border: none;
-            border-bottom: 1px solid #27272a;
-            padding: 0 1rem;
-            opacity: 1;
+            border-bottom: 1px solid #3f3f46;
+            padding: 10px;
+            z-index: 50;
         }
 
         .editor-toolbar button {
-            color: #a1a1aa !important;
+            color: #d4d4d8 !important;
             border: none !important;
-            transition: all 0.2s;
+            background: transparent !important;
+            margin-right: 4px !important;
             border-radius: 6px !important;
-            margin-right: 2px !important;
         }
 
         .editor-toolbar button:hover {
-            background: #27272a !important;
-            color: #fff !important;
+            background: #3f3f46 !important;
         }
 
         .editor-toolbar button.active {
-            background: #27272a !important;
-            color: #6366f1 !important;
-        }
-
-        .editor-toolbar i.separator {
-            border-right-color: #27272a;
-            border-left: none;
+            background: #3f3f46 !important;
+            color: #818cf8 !important;
         }
 
         .CodeMirror {
-            background: #09090b;
-            color: #e4e4e7;
-            /* Zinc 200 */
+            flex-grow: 1;
+            height: auto !important;
+            background: #202023;
+            color: #f4f4f5;
             border: none;
-            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-family: 'JetBrains Mono', monospace;
             font-size: 16px;
-            /* Better for mobile reading */
-            line-height: 1.7;
-            padding: 20px;
-            height: 100%;
+            padding: 15px;
         }
 
-        /* THE CURSOR FIX */
         .CodeMirror-cursor {
-            border-left: 2px solid #6366f1 !important;
-            /* Indigo cursor */
+            border-left: 2px solid #818cf8 !important;
             border-right: none;
             width: 0;
-        }
-
-        .editor-preview {
-            background: #09090b;
-            color: #e4e4e7;
-            padding: 20px;
         }
 
         .editor-statusbar {
             display: none;
         }
 
-        /* Hide status bar for cleaner look */
-
-        /* --- Drag & Drop UI --- */
-        .drop-target {
-            background-color: rgba(99, 102, 241, 0.15) !important;
-            border: 1px dashed #6366f1 !important;
-            color: #fff !important;
+        /* --- Transitions --- */
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
         }
 
-        .dragging {
-            opacity: 0.5;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* --- Utilities --- */
-        .glass {
-            background: rgba(24, 24, 27, 0.95);
-            backdrop-filter: blur(8px);
-        }
-
-        .mobile-sidebar-overlay {
+        .mobile-overlay {
             background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Dragging Visuals */
+        .dragging-folder {
+            opacity: 0.5;
+            border: 1px dashed #818cf8;
+        }
+
+        .drag-over-folder {
+            background: rgba(129, 140, 248, 0.2) !important;
+        }
+
+        .drag-over-top {
+            border-top: 2px solid #818cf8;
+        }
+
+        .drag-over-bottom {
+            border-bottom: 2px solid #818cf8;
         }
     </style>
 </head>
@@ -165,188 +165,229 @@
     class="bg-bg text-textMain h-[100dvh] flex flex-col md:flex-row overflow-hidden selection:bg-accent selection:text-white">
 
     <header
-        class="md:hidden h-14 bg-sidebar border-b border-border flex items-center justify-between px-4 z-20 flex-shrink-0">
-        <button onclick="toggleSidebar()" class="text-textMuted hover:text-white p-2">
-            <i class="ph ph-list text-2xl"></i>
-        </button>
-        <span class="font-bold text-lg tracking-wide flex items-center gap-2">
+        class="md:hidden h-14 bg-sidebar border-b border-border flex items-center justify-between px-4 z-30 flex-shrink-0">
+        <button onclick="toggleSidebar()" class="text-textMuted hover:text-white p-2"><i
+                class="ph ph-list text-2xl"></i></button>
+        <button onclick="goHome()" class="font-bold text-lg tracking-wide text-white flex items-center gap-2">
             <i class="ph-fill ph-hexagon text-accent"></i> FusionFlow
-        </span>
-        <button onclick="createItem()" class="bg-accent text-white p-2 rounded-lg shadow-lg shadow-indigo-500/20">
-            <i class="ph ph-plus-bold"></i>
         </button>
+        <button onclick="openSettings()" class="text-textMuted hover:text-white p-2"><i
+                class="ph ph-gear text-2xl"></i></button>
     </header>
 
-    <div id="sidebar-overlay" onclick="toggleSidebar()"
-        class="fixed inset-0 mobile-sidebar-overlay z-30 hidden md:hidden"></div>
-
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 mobile-overlay z-40 hidden md:hidden">
+    </div>
     <aside id="sidebar"
-        class="fixed inset-y-0 left-0 w-[280px] bg-sidebar border-r border-border flex flex-col z-40 transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none">
-
-        <div class="hidden md:flex h-16 items-center px-6 border-b border-border">
-            <i class="ph-fill ph-hexagon text-accent text-2xl mr-2"></i>
-            <span class="font-bold text-lg tracking-wide text-white">FusionFlow</span>
+        class="fixed inset-y-0 left-0 w-[300px] bg-sidebar border-r border-border flex flex-col z-50 transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none">
+        <div class="hidden md:flex h-16 items-center px-6 border-b border-border bg-sidebar cursor-pointer hover:bg-card transition"
+            onclick="goHome()">
+            <i class="ph-fill ph-hexagon text-accent text-2xl mr-3"></i>
+            <span class="font-bold text-xl tracking-wide text-white">FusionFlow</span>
         </div>
 
-        <div class="p-4">
-            <div class="bg-bg p-1 rounded-lg border border-border flex">
+        <div class="p-4 bg-sidebar">
+            <div class="bg-card p-1.5 rounded-xl border border-border flex">
                 <button onclick="switchMode('notes')" id="btn-mode-notes"
-                    class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md transition-all text-sm font-medium">
-                    <i class="ph ph-notebook"></i> Notes
+                    class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all text-sm font-semibold">
+                    <i class="ph ph-notebook text-lg"></i> Notes
                 </button>
                 <button onclick="switchMode('bookmarks')" id="btn-mode-bookmarks"
-                    class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md transition-all text-sm font-medium">
-                    <i class="ph ph-bookmarks"></i> Links
+                    class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all text-sm font-semibold">
+                    <i class="ph ph-bookmarks text-lg"></i> Links
                 </button>
             </div>
         </div>
 
-        <div class="px-4 mb-2 flex gap-2">
+        <div class="px-4 mb-2 flex gap-2 bg-sidebar">
             <button onclick="createFolder()"
-                class="flex-1 bg-card hover:bg-hover text-textMuted hover:text-white py-2 rounded border border-border text-xs font-medium transition flex items-center justify-center gap-1.5">
-                <i class="ph ph-folder-plus text-sm"></i> Folder
+                class="flex-1 bg-card hover:bg-hover text-textMuted hover:text-white py-3 rounded-lg border border-border text-sm font-medium transition flex items-center justify-center gap-2">
+                <i class="ph ph-folder-plus text-lg"></i> Folder
             </button>
             <button onclick="createItem()"
-                class="hidden md:flex flex-1 bg-accent hover:bg-accentHover text-white py-2 rounded border border-transparent text-xs font-medium transition items-center justify-center gap-1.5 shadow-lg shadow-indigo-500/20">
-                <i class="ph ph-plus-bold text-sm"></i> New Item
+                class="flex-1 bg-accent hover:bg-accentHover text-white py-3 rounded-lg border border-transparent text-sm font-medium transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20">
+                <i class="ph ph-plus-bold text-lg"></i> New
             </button>
         </div>
 
-        <div id="sidebar-content" class="flex-1 overflow-y-auto px-3 py-2 space-y-1 pb-20">
-        </div>
+        <div id="sidebar-content" class="flex-1 overflow-y-auto px-4 py-3 space-y-1 bg-sidebar pb-4"></div>
 
-        <div class="p-4 border-t border-border bg-sidebar">
-            <div class="flex justify-between items-center text-textMuted px-2">
-                <div class="flex gap-4">
-                    <button onclick="triggerImport()" class="hover:text-white transition tooltip" title="Import">
-                        <i class="ph ph-upload-simple text-lg"></i>
-                    </button>
-                    <button onclick="exportAllData()" class="hover:text-white transition tooltip" title="Export All">
-                        <i class="ph ph-download-simple text-lg"></i>
-                    </button>
-                </div>
-                <button onclick="resetData()" class="hover:text-red-400 transition tooltip" title="Clear All">
-                    <i class="ph ph-trash text-lg"></i>
-                </button>
-            </div>
-            <input type="file" id="importFile" onchange="handleImport(this)" class="hidden">
+        <div class="p-4 border-t border-border bg-sidebar flex items-center justify-between">
+            <button onclick="goHome()" class="flex items-center gap-2 text-textMuted hover:text-white transition"
+                title="Home Dashboard">
+                <i class="ph-fill ph-house text-xl"></i>
+            </button>
+            <button onclick="openSettings()"
+                class="flex items-center gap-2 text-textMuted hover:text-white transition px-4 py-2 hover:bg-card rounded-lg">
+                <i class="ph-fill ph-gear text-xl"></i>
+                <span class="text-sm font-medium">Settings</span>
+            </button>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative bg-bg w-full">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative bg-bg w-full z-0">
 
-        <div id="view-notes" class="flex flex-col h-full w-full hidden">
-            <div
-                class="h-14 md:h-16 border-b border-border flex items-center justify-between px-4 md:px-8 bg-bg flex-shrink-0">
-                <input type="text" id="note-title" placeholder="Untitled Note"
-                    class="bg-transparent text-lg md:text-xl font-bold text-white focus:outline-none w-full placeholder-zinc-600 truncate"
-                    oninput="updateCurrentNoteTitle()">
+        <div id="view-home" class="view-container flex flex-col h-full w-full overflow-y-auto p-4 md:p-10 fade-in">
+            <div class="max-w-6xl mx-auto w-full">
+                <h1 class="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+                <p class="text-textMuted mb-8">Here are your recent items.</p>
 
-                <div class="flex gap-1 md:gap-3 ml-2 md:ml-4 flex-shrink-0">
-                    <span id="save-indicator"
-                        class="text-xs text-zinc-500 flex items-center mr-2 hidden md:flex">Saved</span>
-                    <button onclick="exportCurrentNote()"
-                        class="p-2 rounded-md hover:bg-hover text-textMuted hover:text-white transition">
-                        <i class="ph ph-file-md text-xl"></i>
-                    </button>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2"><i
+                            class="ph-fill ph-notebook text-accent"></i> Recent Notes</h2>
+                    <button onclick="switchMode('notes')" class="text-sm text-accent hover:text-white transition">View
+                        All</button>
+                </div>
+                <div id="home-notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10"></div>
+
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2"><i
+                            class="ph-fill ph-bookmarks text-accent"></i> Recent Links</h2>
+                    <button onclick="switchMode('bookmarks')"
+                        class="text-sm text-accent hover:text-white transition">View All</button>
+                </div>
+                <div id="home-bookmarks-grid"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+            </div>
+        </div>
+
+        <div id="view-folder-dashboard"
+            class="view-container flex flex-col h-full w-full overflow-y-auto p-4 md:p-10 hidden fade-in">
+            <div class="max-w-6xl mx-auto w-full">
+                <div
+                    class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-border pb-6">
+                    <div>
+                        <div class="text-sm text-accent font-bold uppercase tracking-wider mb-1">Folder</div>
+                        <h1 id="fd-title" class="text-3xl font-bold text-white">Folder Name</h1>
+                        <p id="fd-count" class="text-textMuted mt-1">0 items</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="renameCurrentFolder()"
+                            class="px-4 py-2 bg-card hover:bg-hover border border-border rounded-lg text-white text-sm font-medium flex items-center gap-2 transition">
+                            <i class="ph-bold ph-pencil-simple"></i> Rename
+                        </button>
+                        <button onclick="deleteCurrentFolder()"
+                            class="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm font-medium flex items-center gap-2 transition">
+                            <i class="ph-bold ph-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+
+                <div id="fd-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
+                </div>
+            </div>
+        </div>
+
+        <div id="view-notes" class="view-container flex flex-col h-full w-full hidden">
+            <div class="h-16 border-b border-border flex items-center justify-between px-4 md:px-8 bg-bg flex-shrink-0">
+                <div class="flex-1 min-w-0 mr-4">
+                    <input type="text" id="note-title" placeholder="Untitled Note"
+                        class="bg-transparent text-xl font-bold text-white focus:outline-none w-full placeholder-zinc-500 truncate"
+                        oninput="updateCurrentNoteTitle()">
+                    <div id="note-date" class="text-xs text-zinc-500 mt-0.5 font-mono"></div>
+                </div>
+
+                <div class="flex gap-3 flex-shrink-0 items-center">
+                    <span id="save-indicator" class="text-xs text-zinc-500 font-mono hidden md:block">SAVED</span>
                     <button onclick="deleteCurrentItem()"
-                        class="p-2 rounded-md hover:bg-red-500/10 text-textMuted hover:text-red-500 transition">
+                        class="p-2 rounded-lg hover:bg-red-500/10 text-textMuted hover:text-red-400 transition"
+                        title="Delete Note">
                         <i class="ph ph-trash text-xl"></i>
+                    </button>
+                    <button onclick="closeEditor()"
+                        class="md:hidden p-2 rounded-lg hover:bg-card text-textMuted hover:text-white transition">
+                        <i class="ph ph-x text-xl"></i>
                     </button>
                 </div>
             </div>
-            <div class="flex-1 overflow-hidden relative">
+            <div class="flex-1 overflow-hidden relative bg-bg w-full">
                 <textarea id="md-editor"></textarea>
             </div>
         </div>
 
-        <div id="view-bookmarks" class="flex flex-col h-full w-full hidden bg-bg">
-            <div
-                class="h-14 md:h-16 border-b border-border flex items-center justify-between px-4 md:px-8 flex-shrink-0">
+        <div id="view-bookmarks" class="view-container flex flex-col h-full w-full hidden bg-bg">
+            <div class="h-16 border-b border-border flex items-center justify-between px-4 md:px-8 flex-shrink-0 bg-bg">
                 <div class="flex items-center gap-3">
                     <h2 class="hidden md:block text-lg font-bold text-white">Bookmarks</h2>
                     <span id="bm-folder-label"
-                        class="px-2 py-0.5 rounded bg-zinc-800 text-xs text-zinc-400 border border-zinc-700">All</span>
+                        class="px-2 py-1 rounded-md bg-card text-xs text-textMuted border border-border uppercase tracking-wide font-bold">All</span>
                 </div>
-
                 <div class="relative">
                     <i
-                        class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
-                    <input type="text" id="bookmark-search" placeholder="Search..."
-                        class="bg-card border border-border text-sm rounded-full pl-9 pr-4 py-1.5 focus:outline-none focus:border-accent text-white w-40 md:w-64 placeholder-zinc-600 transition-all"
+                        class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-textMuted text-lg"></i>
+                    <input type="text" id="bookmark-search" placeholder="Search links..."
+                        class="bg-card border border-border text-base rounded-full pl-10 pr-4 py-2 focus:outline-none focus:border-accent text-white w-40 md:w-64 placeholder-zinc-600 transition-all"
                         oninput="renderBookmarks()">
                 </div>
             </div>
-
-            <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-bg">
                 <div id="bookmarks-grid"
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
-                </div>
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20"></div>
             </div>
         </div>
-
-        <div id="view-empty"
-            class="flex flex-col h-full w-full items-center justify-center text-zinc-600 p-4 text-center">
-            <div
-                class="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mb-6 border border-zinc-800">
-                <i class="ph ph-pencil-simple-slash text-4xl opacity-50"></i>
-            </div>
-            <h3 class="text-white font-medium text-lg mb-2">No Note Selected</h3>
-            <p class="text-sm max-w-xs mx-auto">Select a note from the sidebar or create a new one to get started.</p>
-            <button onclick="createItem()"
-                class="mt-6 px-6 py-2 bg-accent hover:bg-accentHover text-white rounded-full text-sm font-medium transition shadow-lg shadow-indigo-500/20 md:hidden">
-                Create New
-            </button>
-        </div>
-
     </main>
 
-    <div id="modal-overlay" class="fixed inset-0 z-[60] hidden items-center justify-center mobile-sidebar-overlay p-4">
-        <div id="modal-bookmark"
-            class="bg-[#18181b] border border-border p-6 rounded-2xl w-full max-w-md shadow-2xl transform scale-95 opacity-0 transition-all duration-200">
-            <h3 class="text-lg font-bold mb-6 text-white flex items-center gap-2">
-                <i class="ph-fill ph-bookmark-simple text-accent"></i> Add Bookmark
-            </h3>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-zinc-500 mb-1 ml-1">TITLE</label>
-                    <input type="text" id="bm-title"
-                        class="w-full bg-bg border border-border p-3 rounded-lg text-sm focus:border-accent outline-none text-white placeholder-zinc-700"
-                        placeholder="e.g. My Portfolio">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-zinc-500 mb-1 ml-1">URL</label>
-                    <input type="url" id="bm-url"
-                        class="w-full bg-bg border border-border p-3 rounded-lg text-sm focus:border-accent outline-none text-white placeholder-zinc-700"
-                        placeholder="https://example.com">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-zinc-500 mb-1 ml-1">FOLDER</label>
-                    <select id="bm-folder"
-                        class="w-full bg-bg border border-border p-3 rounded-lg text-sm focus:border-accent outline-none text-white appearance-none">
-                    </select>
-                </div>
+    <div id="modal-settings" class="fixed inset-0 z-[100] hidden items-center justify-center mobile-overlay p-4">
+        <div
+            class="bg-sidebar border border-border w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden fade-in">
+            <div class="p-5 border-b border-border flex justify-between items-center bg-card">
+                <h3 class="font-bold text-white text-lg flex items-center gap-2"><i
+                        class="ph-fill ph-sliders text-accent"></i> Settings</h3>
+                <button onclick="closeSettings()" class="text-textMuted hover:text-white p-1"><i
+                        class="ph-bold ph-x text-xl"></i></button>
             </div>
-
-            <div class="flex justify-end gap-3 mt-8">
-                <button onclick="closeModals()"
-                    class="px-4 py-2 text-sm text-textMuted hover:text-white font-medium">Cancel</button>
-                <button onclick="saveNewBookmark()"
-                    class="px-6 py-2 text-sm bg-accent hover:bg-accentHover text-white rounded-lg font-medium shadow-lg shadow-indigo-500/20">Save
-                    Bookmark</button>
+            <div class="p-6 overflow-y-auto space-y-6">
+                <div>
+                    <h4 class="text-sm font-bold text-textMuted uppercase tracking-wider mb-3">Backup & Restore</h4>
+                    <button onclick="executeExport()"
+                        class="w-full bg-card hover:bg-hover text-white py-3 rounded-xl border border-border text-sm font-medium transition flex items-center justify-center gap-2 mb-2">
+                        <i class="ph-bold ph-download-simple"></i> Download All Data (JSON)
+                    </button>
+                    <div class="flex gap-2">
+                        <input type="file" id="importFile" class="hidden" onchange="handleImport(this)">
+                        <button onclick="document.getElementById('importFile').click()"
+                            class="flex-1 bg-card hover:bg-hover border border-border text-white py-3 rounded-xl text-sm font-medium transition">
+                            Import JSON
+                        </button>
+                    </div>
+                </div>
+                <div class="h-px bg-border"></div>
+                <div>
+                    <h4 class="text-sm font-bold text-red-400 uppercase tracking-wider mb-3">Danger Zone</h4>
+                    <button onclick="resetData()"
+                        class="w-full border border-red-500/30 text-red-400 hover:bg-red-500/10 py-3 rounded-xl text-sm font-medium transition">
+                        Delete All Data
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="toast-container"
-        class="fixed bottom-6 right-6 md:bottom-8 md:right-8 flex flex-col gap-2 z-[70] pointer-events-none"></div>
+    <div id="modal-bookmark" class="fixed inset-0 z-[110] hidden items-center justify-center mobile-overlay p-4">
+        <div class="bg-card border border-border p-6 rounded-2xl w-full max-w-sm shadow-2xl fade-in">
+            <h3 class="text-lg font-bold mb-4 text-white" id="bm-modal-title">New Bookmark</h3>
+            <input type="hidden" id="bm-id"> <input type="text" id="bm-title"
+                class="w-full bg-bg border border-border p-3 rounded-lg mb-3 text-base focus:border-accent outline-none text-white"
+                placeholder="Title">
+            <input type="url" id="bm-url"
+                class="w-full bg-bg border border-border p-3 rounded-lg mb-3 text-base focus:border-accent outline-none text-white"
+                placeholder="https://...">
+            <select id="bm-folder"
+                class="w-full bg-bg border border-border p-3 rounded-lg mb-6 text-base focus:border-accent outline-none text-white"></select>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeBookmarkModal()"
+                    class="px-5 py-2 text-textMuted hover:text-white text-sm font-medium">Cancel</button>
+                <button onclick="saveNewBookmark()"
+                    class="px-5 py-2 bg-accent text-white rounded-lg text-sm font-bold">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
-        // --- State ---
-        const STORAGE_KEY = 'fusionflow_pro_v1';
+        const STORAGE_KEY = 'fusionflow_v3_stable';
         let easyMDE;
-
+        let dragSrcEl = null;
         let state = {
             mode: 'notes',
             folders: [],
@@ -356,15 +397,12 @@
             activeFolderId: 'all'
         };
 
-        // --- Init ---
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             initEditor();
+            updateUIState();
+            goHome();
             renderSidebar();
-            updateView();
-
-            // Mobile drag blocking prevent
-            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
         });
 
         function initEditor() {
@@ -372,12 +410,11 @@
                 element: document.getElementById('md-editor'),
                 spellChecker: false,
                 status: false,
-                placeholder: "Start typing your note here...",
-                toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'code', '|', 'fullscreen', 'side-by-side'],
+                placeholder: "Start typing...",
+                toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'code', 'table', '|', 'fullscreen', 'side-by-side'],
                 theme: "dark",
-                autoDownloadFontAwesome: false // Using Phosphor instead
+                minHeight: "100%",
             });
-
             easyMDE.codemirror.on("change", () => {
                 if (state.activeNoteId) {
                     const note = state.notes.find(n => n.id === state.activeNoteId);
@@ -385,146 +422,247 @@
                         note.content = easyMDE.value();
                         note.updatedAt = Date.now();
                         saveData();
-                        document.getElementById('save-indicator').textContent = 'Saving...';
-                        setTimeout(() => document.getElementById('save-indicator').textContent = 'Saved', 500);
+                        document.getElementById('save-indicator').textContent = "SAVING...";
+                        clearTimeout(window.saveTimeout);
+                        window.saveTimeout = setTimeout(() => { document.getElementById('save-indicator').textContent = "SAVED"; }, 600);
                     }
                 }
             });
         }
 
-        // --- Logic ---
+        // --- Navigation & Views ---
+
+        function hideAllViews() {
+            document.querySelectorAll('.view-container').forEach(el => el.classList.add('hidden'));
+        }
+
+        function goHome() {
+            hideAllViews();
+            document.getElementById('view-home').classList.remove('hidden');
+            state.activeNoteId = null;
+            state.activeFolderId = 'all';
+            toggleSidebar(false);
+            renderHome();
+            updateUIState('home');
+            renderSidebar();
+        }
 
         function switchMode(mode) {
             state.mode = mode;
             state.activeFolderId = 'all';
-            state.activeNoteId = null;
-            toggleSidebar(false); // Close sidebar on mobile after switch
-
-            const btnNotes = document.getElementById('btn-mode-notes');
-            const btnBm = document.getElementById('btn-mode-bookmarks');
-
-            const activeClass = ['bg-accent', 'text-white', 'shadow-lg', 'shadow-indigo-500/20'];
-            const inactiveClass = ['hover:bg-hover', 'text-textMuted'];
 
             if (mode === 'notes') {
-                btnNotes.classList.add(...activeClass);
-                btnNotes.classList.remove(...inactiveClass);
-                btnBm.classList.remove(...activeClass);
-                btnBm.classList.add(...inactiveClass);
+                hideAllViews();
+                if (state.activeNoteId) {
+                    document.getElementById('view-notes').classList.remove('hidden');
+                    setTimeout(() => easyMDE.codemirror.refresh(), 10);
+                } else {
+                    document.getElementById('view-home').classList.remove('hidden');
+                    renderHome();
+                }
             } else {
-                btnBm.classList.add(...activeClass);
-                btnBm.classList.remove(...inactiveClass);
-                btnNotes.classList.remove(...activeClass);
-                btnNotes.classList.add(...inactiveClass);
+                hideAllViews();
+                document.getElementById('view-bookmarks').classList.remove('hidden');
+                renderBookmarks();
             }
 
             renderSidebar();
-            updateView();
+            updateUIState(mode);
+            toggleSidebar(false);
         }
 
-        function toggleSidebar(force) {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
+        function updateUIState(view) {
+            const btnNotes = document.getElementById('btn-mode-notes');
+            const btnBm = document.getElementById('btn-mode-bookmarks');
+            const activeClass = ['bg-accent', 'text-white', 'shadow-md'];
+            const inactiveClass = ['hover:bg-hover', 'text-textMuted'];
 
-            const isClosed = sidebar.classList.contains('-translate-x-full');
-            const shouldOpen = force !== undefined ? force : isClosed;
+            btnNotes.className = "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all text-sm font-semibold";
+            btnBm.className = "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all text-sm font-semibold";
 
-            if (shouldOpen) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
+            if (state.mode === 'notes') {
+                btnNotes.classList.add(...activeClass);
+                btnBm.classList.add(...inactiveClass);
             } else {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
+                btnBm.classList.add(...activeClass);
+                btnNotes.classList.add(...inactiveClass);
             }
         }
 
-        // --- Sidebar & Drag Drop ---
+        // --- Folder Dashboard Logic ---
+
+        function showFolderDashboard(folderId) {
+            if (folderId === 'all') return goHome();
+            if (folderId === 'unsorted' && state.mode === 'bookmarks') {
+                switchMode('bookmarks'); state.activeFolderId = 'unsorted'; renderBookmarks(); return;
+            }
+
+            const folder = state.folders.find(f => f.id === folderId);
+            if (!folder) return;
+
+            hideAllViews();
+            document.getElementById('view-folder-dashboard').classList.remove('hidden');
+
+            // Setup Header
+            document.getElementById('fd-title').textContent = folder.name;
+
+            // Render Content based on mode
+            const grid = document.getElementById('fd-grid');
+            grid.innerHTML = '';
+
+            if (state.mode === 'notes') {
+                const notes = state.notes.filter(n => n.folderId === folderId).sort((a, b) => b.updatedAt - a.updatedAt);
+                document.getElementById('fd-count').textContent = `${notes.length} notes`;
+
+                notes.forEach(note => {
+                    const date = new Date(note.updatedAt).toLocaleDateString();
+                    const el = document.createElement('div');
+                    el.draggable = true; // Enable drag for dashboard items
+                    el.className = "bg-card border border-border p-5 rounded-xl hover:border-accent transition cursor-pointer group h-48 flex flex-col";
+                    el.onclick = () => { loadNote(note.id); };
+                    el.ondragstart = (e) => {
+                        e.dataTransfer.effectAllowed = 'move';
+                        e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'note', id: note.id }));
+                    };
+                    el.innerHTML = `
+                        <div class="font-bold text-white truncate mb-1 text-lg">${note.title || 'Untitled'}</div>
+                        <div class="text-xs text-textMuted mb-3">${date}</div>
+                        <div class="text-sm text-zinc-500 line-clamp-4 leading-relaxed">${note.content.substring(0, 150).replace(/[#*_]/g, '')}</div>
+                    `;
+                    grid.appendChild(el);
+                });
+                if (notes.length === 0) grid.innerHTML = `<div class="text-zinc-500 col-span-full">Empty folder.</div>`;
+
+            } else {
+                const bms = state.bookmarks.filter(b => b.folderId === folderId);
+                document.getElementById('fd-count').textContent = `${bms.length} links`;
+                bms.forEach(bm => grid.appendChild(createBookmarkCard(bm)));
+            }
+        }
+
+        function renameCurrentFolder() {
+            const f = state.folders.find(f => f.id === state.activeFolderId);
+            if (f) {
+                const n = prompt("New Folder Name:", f.name);
+                if (n) { f.name = n; saveData(); renderSidebar(); showFolderDashboard(f.id); }
+            }
+        }
+
+        function deleteCurrentFolder() {
+            if (confirm("Delete folder? Items will be moved to Unsorted.")) {
+                const id = state.activeFolderId;
+                deleteFolder(id);
+                goHome();
+            }
+        }
+
+        // --- Sidebar & Reordering ---
 
         function renderSidebar() {
             const container = document.getElementById('sidebar-content');
             container.innerHTML = '';
 
-            // 1. "All" Folder
+            // "All" Button
             const allDiv = document.createElement('div');
-            allDiv.className = `mb-2 px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 text-sm font-medium transition ${state.activeFolderId === 'all' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'}`;
-            allDiv.innerHTML = `<i class="ph-fill ph-stack text-lg"></i> All ${state.mode === 'notes' ? 'Notes' : 'Bookmarks'}`;
+            allDiv.className = `px-4 py-3 rounded-xl cursor-pointer flex items-center gap-3 text-base font-medium transition ${state.activeFolderId === 'all' ? 'bg-card text-white border border-border' : 'text-zinc-500 hover:text-zinc-300 hover:bg-card/50 border border-transparent'}`;
+            allDiv.innerHTML = `<i class="ph-fill ph-stack text-xl"></i> All ${state.mode === 'notes' ? 'Notes' : 'Bookmarks'}`;
             allDiv.onclick = () => {
                 state.activeFolderId = 'all';
                 renderSidebar();
                 if (state.mode === 'bookmarks') renderBookmarks();
+                else goHome();
                 toggleSidebar(false);
             };
-            // Drop target for "All" (removes folder assignment)
             setupDropTarget(allDiv, null);
             container.appendChild(allDiv);
 
-            // 2. Dynamic Folders
-            const modeFolders = state.folders.filter(f => f.type === state.mode);
-
-            if (modeFolders.length > 0) {
-                const folderLabel = document.createElement('div');
-                folderLabel.className = "px-3 mt-4 mb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-600";
-                folderLabel.textContent = "Folders";
-                container.appendChild(folderLabel);
+            // Folders Header
+            const folders = state.folders.filter(f => f.type === state.mode);
+            if (folders.length > 0) {
+                const l = document.createElement('div');
+                l.className = "px-4 mt-5 mb-2 text-xs font-bold uppercase tracking-widest text-zinc-600";
+                l.textContent = "Folders";
+                container.appendChild(l);
             }
 
-            modeFolders.forEach(folder => {
-                const folderEl = document.createElement('div');
-                folderEl.className = "group mb-1";
+            folders.forEach((folder, index) => {
+                const count = state.mode === 'notes'
+                    ? state.notes.filter(n => n.folderId === folder.id).length
+                    : state.bookmarks.filter(b => b.folderId === folder.id).length;
 
-                const header = document.createElement('div');
-                header.className = `px-3 py-2 rounded-lg cursor-pointer flex items-center justify-between text-sm font-medium transition ${state.activeFolderId === folder.id ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'}`;
-                header.onclick = () => {
+                const w = document.createElement('div');
+                w.className = "mb-1";
+
+                const h = document.createElement('div');
+                h.draggable = true;
+                h.className = `group px-4 py-3 rounded-xl cursor-pointer flex items-center justify-between text-base font-medium transition border border-transparent ${state.activeFolderId === folder.id ? 'bg-card text-white' : 'text-zinc-400 hover:text-zinc-200 hover:bg-card/50'}`;
+
+                // Folder Item - Cleaned up (removed buttons)
+                h.innerHTML = `
+                    <div class="flex items-center gap-3 overflow-hidden flex-1 pointer-events-none">
+                        <i class="ph-fill ph-folder text-xl ${state.activeFolderId === folder.id ? 'text-accent' : 'text-zinc-600'}"></i>
+                        <span class="truncate">${folder.name}</span>
+                    </div>
+                    <span class="text-xs text-zinc-600 font-mono group-hover:text-zinc-500">${count}</span>
+                `;
+
+                h.onclick = () => {
                     state.activeFolderId = folder.id;
                     renderSidebar();
                     if (state.mode === 'bookmarks') renderBookmarks();
+                    else showFolderDashboard(folder.id);
                     toggleSidebar(false);
                 };
 
-                header.innerHTML = `
-                    <div class="flex items-center gap-2 overflow-hidden">
-                        <i class="ph-fill ph-folder text-lg ${state.activeFolderId === folder.id ? 'text-accent' : 'text-zinc-600'}"></i>
-                        <span class="truncate">${folder.name}</span>
-                    </div>
-                    <button class="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 transition" onclick="event.stopPropagation(); deleteFolder('${folder.id}')">
-                        <i class="ph ph-x"></i>
-                    </button>
-                `;
+                setupFolderDragEvents(h, index, folder.id);
+                setupDropTarget(h, folder.id);
+                w.appendChild(h);
 
-                setupDropTarget(header, folder.id);
-                folderEl.appendChild(header);
-
-                // Notes inside folder
+                // Nested Notes List (Restored Logic)
                 if (state.mode === 'notes') {
-                    const notesInFolder = state.notes.filter(n => n.folderId === folder.id);
-                    if (notesInFolder.length > 0) {
+                    const notes = state.notes.filter(n => n.folderId === folder.id);
+                    if (notes.length > 0) {
                         const list = document.createElement('div');
-                        list.className = "ml-4 pl-3 border-l border-zinc-800 mt-1 space-y-0.5";
-
-                        notesInFolder.forEach(note => {
-                            const noteEl = createNoteSidebarItem(note);
-                            list.appendChild(noteEl);
-                        });
-                        folderEl.appendChild(list);
+                        list.className = "ml-5 pl-4 border-l border-border mt-1 space-y-1";
+                        notes.forEach(n => list.appendChild(createNoteSidebarItem(n)));
+                        w.appendChild(list);
                     }
                 }
 
-                container.appendChild(folderEl);
+                container.appendChild(w);
             });
 
-            // 3. Unorganized Notes (if in All mode or showing explicitly)
-            if (state.mode === 'notes') {
-                const unorganized = state.notes.filter(n => !n.folderId);
-                if (unorganized.length > 0) {
-                    const unLabel = document.createElement('div');
-                    unLabel.className = "px-3 mt-4 mb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-600";
-                    unLabel.textContent = "Unsorted";
-                    container.appendChild(unLabel);
+            // Unsorted Section
+            let unsortedItems = [];
+            if (state.mode === 'notes') unsortedItems = state.notes.filter(n => !n.folderId);
+            else unsortedItems = state.bookmarks.filter(b => !b.folderId);
 
-                    unorganized.forEach(note => {
-                        const noteEl = createNoteSidebarItem(note);
-                        container.appendChild(noteEl);
-                    });
+            if (unsortedItems.length > 0) {
+                const l = document.createElement('div');
+                l.className = "px-4 mt-5 mb-2 text-xs font-bold uppercase tracking-widest text-zinc-600";
+                l.textContent = "Unsorted";
+                container.appendChild(l);
+
+                if (state.mode === 'notes') {
+                    unsortedItems.forEach(n => container.appendChild(createNoteSidebarItem(n)));
+                } else {
+                    const u = document.createElement('div');
+                    u.className = `group px-4 py-3 rounded-xl cursor-pointer flex items-center justify-between text-base font-medium transition mb-1 ${state.activeFolderId === 'unsorted' ? 'bg-card text-white' : 'text-zinc-400 hover:text-zinc-200 hover:bg-card/50'}`;
+                    u.onclick = () => {
+                        state.activeFolderId = 'unsorted';
+                        renderSidebar();
+                        renderBookmarks();
+                        toggleSidebar(false);
+                    };
+                    u.innerHTML = `
+                        <div class="flex items-center gap-3">
+                             <i class="ph-fill ph-tray text-xl ${state.activeFolderId === 'unsorted' ? 'text-accent' : 'text-zinc-600'}"></i>
+                             <span>Unsorted Items</span>
+                        </div>
+                        <span class="bg-bg border border-border text-xs px-2 py-0.5 rounded-full text-textMuted">${unsortedItems.length}</span>
+                     `;
+                    setupDropTarget(u, null);
+                    container.appendChild(u);
                 }
             }
         }
@@ -532,80 +670,239 @@
         function createNoteSidebarItem(note) {
             const el = document.createElement('div');
             el.draggable = true;
-            el.className = `px-3 py-2 rounded-md cursor-pointer text-xs truncate transition border border-transparent ${state.activeNoteId === note.id ? 'bg-accent/10 text-accent border-accent/20 font-medium' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'}`;
-            el.textContent = note.title || 'Untitled Note';
+            el.className = `px-4 py-2.5 rounded-lg cursor-pointer text-sm truncate transition border border-transparent flex justify-between group ${state.activeNoteId === note.id ? 'bg-accent/10 text-accent font-semibold border-accent/20' : 'text-zinc-500 hover:text-zinc-300 hover:bg-card/30'}`;
+            const dateStr = new Date(note.updatedAt).toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' });
+            el.innerHTML = `<span class="truncate pointer-events-none">${note.title || 'Untitled'}</span><span class="text-[10px] opacity-50 ml-2 pt-0.5 pointer-events-none">${dateStr}</span>`;
             el.onclick = () => { loadNote(note.id); toggleSidebar(false); };
-
-            // Drag Events
             el.ondragstart = (e) => {
                 e.dataTransfer.effectAllowed = 'move';
                 e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'note', id: note.id }));
-                el.classList.add('dragging');
             };
-            el.ondragend = () => {
-                el.classList.remove('dragging');
-                document.querySelectorAll('.drop-target').forEach(dt => dt.classList.remove('drop-target'));
-            };
-
             return el;
         }
 
-        function setupDropTarget(element, targetFolderId) {
-            element.ondragover = (e) => {
-                e.preventDefault(); // Essential
-                e.dataTransfer.dropEffect = 'move';
-                element.classList.add('drop-target');
+        function setupFolderDragEvents(el, index, id) {
+            el.ondragstart = (e) => {
+                dragSrcEl = el;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'folder', index: index, id: id }));
+                el.classList.add('dragging-folder');
             };
-            element.ondragleave = () => {
-                element.classList.remove('drop-target');
+            el.ondragend = () => {
+                el.classList.remove('dragging-folder');
+                document.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(e => {
+                    e.classList.remove('drag-over-top', 'drag-over-bottom');
+                });
             };
-            element.ondrop = (e) => {
+            el.ondragover = (e) => {
                 e.preventDefault();
-                element.classList.remove('drop-target');
+                try {
+                    const rect = el.getBoundingClientRect();
+                    const mid = rect.top + rect.height / 2;
+                    if (e.clientY < mid) {
+                        el.classList.add('drag-over-top');
+                        el.classList.remove('drag-over-bottom');
+                    } else {
+                        el.classList.add('drag-over-bottom');
+                        el.classList.remove('drag-over-top');
+                    }
+                } catch (e) { }
+            };
+            el.ondragleave = () => {
+                el.classList.remove('drag-over-top', 'drag-over-bottom');
+            };
+            el.ondrop = (e) => {
+                e.preventDefault();
+                el.classList.remove('drag-over-top', 'drag-over-bottom');
+
                 const data = JSON.parse(e.dataTransfer.getData('text/plain'));
 
-                if (data.type === 'note' && state.mode === 'notes') {
-                    const note = state.notes.find(n => n.id === data.id);
-                    if (note) {
-                        note.folderId = targetFolderId;
-                        saveData();
-                        renderSidebar();
-                        showToast(`Moved to ${targetFolderId ? 'folder' : 'All Notes'}`);
-                    }
+                if (data.type === 'folder') {
+                    e.stopPropagation();
+                    const fromIndex = data.index;
+                    let toIndex = index;
+
+                    const visibleFolders = state.folders.filter(f => f.type === state.mode);
+                    const itemToMove = visibleFolders[fromIndex];
+                    visibleFolders.splice(fromIndex, 1);
+                    visibleFolders.splice(toIndex, 0, itemToMove);
+
+                    const otherFolders = state.folders.filter(f => f.type !== state.mode);
+                    state.folders = [...visibleFolders, ...otherFolders];
+
+                    saveData();
+                    renderSidebar();
                 }
+            }
+        }
+
+        // --- Bookmarks & Actions ---
+
+        function renderBookmarks() {
+            const g = document.getElementById('bookmarks-grid');
+            g.innerHTML = '';
+            const s = document.getElementById('bookmark-search').value.toLowerCase();
+
+            let l = state.bookmarks;
+            if (state.activeFolderId !== 'all') {
+                if (state.activeFolderId === 'unsorted') l = l.filter(b => !b.folderId);
+                else l = l.filter(b => b.folderId === state.activeFolderId);
+            }
+
+            if (s) l = l.filter(b => b.title.toLowerCase().includes(s) || b.url.toLowerCase().includes(s));
+
+            let folderName = 'All';
+            if (state.activeFolderId === 'unsorted') folderName = 'Unsorted';
+            else if (state.activeFolderId !== 'all') folderName = state.folders.find(f => f.id === state.activeFolderId)?.name || 'All';
+
+            document.getElementById('bm-folder-label').textContent = folderName;
+
+            if (l.length === 0) g.innerHTML = `<div class="text-textMuted col-span-full text-center py-10">No bookmarks found.</div>`;
+            else l.forEach(bm => g.appendChild(createBookmarkCard(bm)));
+        }
+
+        function createBookmarkCard(bm) {
+            const domain = new URL(bm.url).hostname;
+            const fav = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+            const c = document.createElement('div');
+            c.draggable = true; // Make Draggable
+            c.className = "bg-card border border-border p-4 rounded-xl hover:border-zinc-500 transition relative group flex flex-col h-44";
+
+            c.ondragstart = (e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'bookmark', id: bm.id }));
             };
+
+            c.innerHTML = `
+                <div class="flex justify-between items-start mb-3">
+                    <img src="${fav}" class="w-8 h-8 rounded opacity-80 bg-zinc-800 pointer-events-none">
+                    <div class="flex gap-1">
+                        <button onclick="editBookmark('${bm.id}')" class="text-zinc-600 hover:text-accent p-1 rounded hover:bg-zinc-800 transition" title="Edit">
+                            <i class="ph-bold ph-pencil-simple text-lg"></i>
+                        </button>
+                        <button onclick="deleteBookmark('${bm.id}')" class="text-zinc-600 hover:text-red-400 p-1 rounded hover:bg-zinc-800 transition" title="Delete">
+                            <i class="ph ph-trash text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex-1 min-h-0 mb-3">
+                    <div class="font-bold text-sm text-white truncate" title="${bm.title}">${bm.title}</div>
+                    <div class="text-xs text-textMuted truncate mb-1">${domain}</div>
+                    ${bm.folderId ? `<div class="text-[10px] inline-block px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">${getFolderName(bm.folderId)}</div>` : ''}
+                </div>
+                <div class="flex gap-2 mt-auto">
+                    <button onclick="copyLink('${bm.url}')" class="flex-1 bg-sidebar hover:bg-zinc-700 text-textMuted hover:text-white py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1">
+                        <i class="ph-bold ph-copy"></i> Copy
+                    </button>
+                    <a href="${bm.url}" target="_blank" class="flex-1 bg-sidebar hover:bg-accent hover:text-white text-textMuted hover:text-white py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1">
+                         Open <i class="ph-bold ph-arrow-square-out"></i>
+                    </a>
+                </div>
+            `;
+            return c;
+        }
+
+        function getFolderName(id) {
+            return state.folders.find(f => f.id === id)?.name || '';
+        }
+
+        function renderHome() {
+            const notesGrid = document.getElementById('home-notes-grid');
+            const bmGrid = document.getElementById('home-bookmarks-grid');
+            notesGrid.innerHTML = '';
+            bmGrid.innerHTML = '';
+
+            const recentNotes = [...state.notes].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 6);
+            if (recentNotes.length === 0) notesGrid.innerHTML = `<div class="text-textMuted col-span-full">No notes yet.</div>`;
+
+            recentNotes.forEach(note => {
+                const date = new Date(note.updatedAt).toLocaleDateString();
+                const el = document.createElement('div');
+                el.className = "bg-card border border-border p-5 rounded-xl hover:border-accent transition cursor-pointer group";
+                el.onclick = () => { switchMode('notes'); loadNote(note.id); };
+                el.innerHTML = `
+                    <div class="font-bold text-white truncate mb-1 text-lg">${note.title || 'Untitled'}</div>
+                    <div class="text-xs text-textMuted mb-3">${date}</div>
+                    <div class="text-sm text-zinc-500 line-clamp-3 leading-relaxed">${note.content.substring(0, 150).replace(/[#*_]/g, '')}</div>
+                `;
+                notesGrid.appendChild(el);
+            });
+
+            const recentBm = [...state.bookmarks].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 8);
+            if (recentBm.length === 0) bmGrid.innerHTML = `<div class="text-textMuted col-span-full">No bookmarks yet.</div>`;
+            recentBm.forEach(bm => bmGrid.appendChild(createBookmarkCard(bm)));
         }
 
         // --- CRUD ---
 
         function createItem() {
             if (state.mode === 'notes') {
-                const newNote = {
-                    id: Date.now().toString(36),
-                    folderId: state.activeFolderId === 'all' ? null : state.activeFolderId,
-                    title: '',
-                    content: '',
-                    updatedAt: Date.now()
-                };
+                const newNote = { id: Date.now().toString(36), folderId: (state.activeFolderId === 'all' || state.activeFolderId === 'unsorted') ? null : state.activeFolderId, title: '', content: '', updatedAt: Date.now() };
                 state.notes.push(newNote);
-                loadNote(newNote.id);
                 saveData();
+                switchMode('notes');
+                loadNote(newNote.id);
                 renderSidebar();
-
-                // Focus title
-                setTimeout(() => document.getElementById('note-title').focus(), 100);
-                toggleSidebar(false);
             } else {
-                openModal();
+                openBookmarkModal();
             }
         }
 
-        function createFolder() {
-            const name = prompt("New Folder Name:");
-            if (!name) return;
-            state.folders.push({ id: Date.now().toString(), name, type: state.mode });
-            saveData();
-            renderSidebar();
+        function openBookmarkModal(editId = null) {
+            const m = document.getElementById('modal-bookmark'); m.classList.remove('hidden'); m.classList.add('flex');
+            const s = document.getElementById('bm-folder'); s.innerHTML = '<option value="">No Folder (Unsorted)</option>';
+            state.folders.filter(f => f.type === 'bookmarks').forEach(f => {
+                const o = document.createElement('option'); o.value = f.id; o.textContent = f.name; s.appendChild(o);
+            });
+
+            if (editId) {
+                const bm = state.bookmarks.find(b => b.id === editId);
+                if (bm) {
+                    document.getElementById('bm-modal-title').textContent = "Edit Bookmark";
+                    document.getElementById('bm-id').value = bm.id;
+                    document.getElementById('bm-title').value = bm.title;
+                    document.getElementById('bm-url').value = bm.url;
+                    document.getElementById('bm-folder').value = bm.folderId || "";
+                }
+            } else {
+                document.getElementById('bm-modal-title').textContent = "New Bookmark";
+                document.getElementById('bm-id').value = "";
+                document.getElementById('bm-title').value = "";
+                document.getElementById('bm-url').value = "";
+                if (state.activeFolderId !== 'all' && state.activeFolderId !== 'unsorted') document.getElementById('bm-folder').value = state.activeFolderId;
+            }
+        }
+
+        function editBookmark(id) {
+            openBookmarkModal(id);
+        }
+
+        function saveNewBookmark() {
+            const id = document.getElementById('bm-id').value;
+            const t = document.getElementById('bm-title').value;
+            let u = document.getElementById('bm-url').value;
+            const f = document.getElementById('bm-folder').value;
+
+            if (t && u) {
+                if (!u.startsWith('http')) u = 'https://' + u;
+
+                if (id) {
+                    // Edit existing
+                    const bm = state.bookmarks.find(b => b.id === id);
+                    if (bm) { bm.title = t; bm.url = u; bm.folderId = f || null; }
+                } else {
+                    // New
+                    state.bookmarks.push({ id: Date.now().toString(36), title: t, url: u, folderId: f || null, createdAt: Date.now() });
+                }
+
+                saveData();
+                if (state.mode === 'bookmarks') renderBookmarks();
+                else renderHome();
+                renderSidebar();
+                closeBookmarkModal();
+                showToast("Saved");
+            }
         }
 
         function loadNote(id) {
@@ -613,14 +910,12 @@
             const note = state.notes.find(n => n.id === id);
             if (note) {
                 document.getElementById('note-title').value = note.title;
-                // Set value only if different to avoid cursor jump (though with load usually we want jump to start)
-                if (easyMDE.value() !== note.content) {
-                    easyMDE.value(note.content);
-                }
-                // Force refresh layout for CodeMirror
-                setTimeout(() => easyMDE.codemirror.refresh(), 10);
+                const d = new Date(note.updatedAt);
+                document.getElementById('note-date').textContent = `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+                if (easyMDE.value() !== note.content) easyMDE.value(note.content);
+                hideAllViews();
+                document.getElementById('view-notes').classList.remove('hidden');
             }
-            updateView();
             renderSidebar();
         }
 
@@ -628,255 +923,93 @@
             const note = state.notes.find(n => n.id === state.activeNoteId);
             if (note) {
                 note.title = document.getElementById('note-title').value;
+                note.updatedAt = Date.now();
                 saveData();
-                // Debounced sidebar update to prevent flickering while typing title
-                clearTimeout(window.titleDebounce);
-                window.titleDebounce = setTimeout(renderSidebar, 500);
+                clearTimeout(window.td);
+                window.td = setTimeout(renderSidebar, 800);
             }
         }
 
-        function deleteCurrentItem() {
-            if (state.activeNoteId) {
-                if (confirm("Delete this note permanently?")) {
-                    state.notes = state.notes.filter(n => n.id !== state.activeNoteId);
-                    state.activeNoteId = null;
-                    saveData();
-                    updateView();
-                    renderSidebar();
-                }
+        function renameFolder(id) {
+            const f = state.folders.find(f => f.id === id);
+            if (f) {
+                const n = prompt("Rename Folder:", f.name);
+                if (n) { f.name = n; saveData(); renderSidebar(); }
             }
         }
 
-        function deleteFolder(id) {
-            if (confirm("Delete folder? Notes inside will become unsorted.")) {
-                state.folders = state.folders.filter(f => f.id !== id);
-                // Reset notes in this folder to null (Unsorted)
-                if (state.mode === 'notes') {
-                    state.notes.forEach(n => { if (n.folderId === id) n.folderId = null; });
-                } else {
-                    state.bookmarks.forEach(b => { if (b.folderId === id) b.folderId = null; });
-                }
-                state.activeFolderId = 'all';
-                saveData();
-                renderSidebar();
-                updateView(); // Refresh bookmark grid if open
-            }
+        function deleteCurrentItem() { if (confirm("Delete note?")) { state.notes = state.notes.filter(n => n.id !== state.activeNoteId); state.activeNoteId = null; saveData(); renderSidebar(); goHome(); } }
+        function deleteBookmark(id) { if (confirm("Delete bookmark?")) { state.bookmarks = state.bookmarks.filter(b => b.id !== id); saveData(); renderBookmarks(); renderHome(); renderSidebar(); } }
+        function createFolder() { const n = prompt("Folder Name:"); if (n) { state.folders.push({ id: Date.now().toString(), name: n, type: state.mode }); saveData(); renderSidebar(); } }
+        function deleteFolder(id) { if (confirm("Delete folder? Items will be moved to Unsorted.")) { state.folders = state.folders.filter(f => f.id !== id); state.notes.forEach(n => { if (n.folderId === id) n.folderId = null }); state.bookmarks.forEach(b => { if (b.folderId === id) b.folderId = null }); saveData(); renderSidebar(); } }
+
+        function setupDropTarget(el, fId) {
+            el.ondragover = (e) => {
+                e.preventDefault();
+                if (!el.classList.contains('dragging-folder')) el.classList.add('bg-accent/20');
+            };
+            el.ondragleave = () => el.classList.remove('bg-accent/20');
+            el.ondrop = (e) => {
+                e.preventDefault(); el.classList.remove('bg-accent/20');
+                try {
+                    const d = JSON.parse(e.dataTransfer.getData('text/plain'));
+                    if (d.type === 'note') {
+                        const n = state.notes.find(x => x.id === d.id);
+                        if (n) { n.folderId = fId; saveData(); renderSidebar(); showFolderDashboard(fId); showToast("Moved Note"); }
+                    } else if (d.type === 'bookmark') {
+                        const b = state.bookmarks.find(x => x.id === d.id);
+                        if (b) {
+                            b.folderId = fId;
+                            saveData();
+                            renderSidebar();
+                            if (state.mode === 'bookmarks') renderBookmarks();
+                            else showFolderDashboard(fId); // Update Dashboard if in that view
+                            showToast("Moved Link");
+                        }
+                    }
+                } catch (e) { }
+            };
         }
 
-        // --- Bookmarks ---
-
-        function openModal() {
-            const modal = document.getElementById('modal-bookmark');
-            const overlay = document.getElementById('modal-overlay');
-            const container = modal.parentElement;
-
-            container.classList.remove('hidden');
-            container.classList.add('flex');
-
-            // Animation
-            setTimeout(() => {
-                modal.classList.remove('scale-95', 'opacity-0');
-                modal.classList.add('scale-100', 'opacity-100');
-            }, 10);
-
-            // Populate Select
-            const select = document.getElementById('bm-folder');
-            select.innerHTML = '<option value="">No Folder</option>';
-            state.folders.filter(f => f.type === 'bookmarks').forEach(f => {
-                const opt = document.createElement('option');
-                opt.value = f.id;
-                opt.textContent = f.name;
-                if (state.activeFolderId === f.id) opt.selected = true;
-                select.appendChild(opt);
-            });
-
-            document.getElementById('bm-title').value = '';
-            document.getElementById('bm-url').value = '';
-            document.getElementById('bm-title').focus();
+        function closeEditor() { if (state.activeFolderId !== 'all') showFolderDashboard(state.activeFolderId); else goHome(); }
+        function toggleSidebar(force) {
+            const s = document.getElementById('sidebar');
+            const o = document.getElementById('sidebar-overlay');
+            const shouldOpen = force !== undefined ? force : s.classList.contains('-translate-x-full');
+            if (shouldOpen) { s.classList.remove('-translate-x-full'); o.classList.remove('hidden'); }
+            else { s.classList.add('-translate-x-full'); o.classList.add('hidden'); }
         }
 
-        function closeModals() {
-            const modal = document.getElementById('modal-bookmark');
-            modal.classList.remove('scale-100', 'opacity-100');
-            modal.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.parentElement.classList.add('hidden');
-                modal.parentElement.classList.remove('flex');
-            }, 200);
+        function closeBookmarkModal() { document.getElementById('modal-bookmark').classList.add('hidden'); document.getElementById('modal-bookmark').classList.remove('flex'); }
+        function openSettings() { document.getElementById('modal-settings').classList.remove('hidden'); document.getElementById('modal-settings').classList.add('flex'); }
+        function closeSettings() { document.getElementById('modal-settings').classList.add('hidden'); document.getElementById('modal-settings').classList.remove('flex'); }
+        function copyLink(url) { navigator.clipboard.writeText(url).then(() => showToast("Link Copied!")); }
+
+        function executeExport() {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+            a.download = `fusionflow_backup_${new Date().toISOString().slice(0, 10)}.json`; a.click();
         }
-
-        function saveNewBookmark() {
-            const title = document.getElementById('bm-title').value;
-            let url = document.getElementById('bm-url').value;
-            const folderId = document.getElementById('bm-folder').value;
-
-            if (!title || !url) return showToast("Please fill required fields");
-            if (!url.startsWith('http')) url = 'https://' + url;
-
-            state.bookmarks.push({
-                id: Date.now().toString(36),
-                title, url, folderId: folderId || null, createdAt: Date.now()
-            });
-            saveData();
-            closeModals();
-            renderBookmarks();
-            showToast("Bookmark Added");
+        function handleImport(input) {
+            const file = input.files[0]; if (!file) return;
+            const r = new FileReader();
+            r.onload = (e) => { try { state = JSON.parse(e.target.result); saveData(); location.reload(); } catch (e) { alert("Invalid file"); } };
+            r.readAsText(file);
         }
-
-        function renderBookmarks() {
-            const grid = document.getElementById('bookmarks-grid');
-            grid.innerHTML = '';
-            const search = document.getElementById('bookmark-search').value.toLowerCase();
-
-            // Filter
-            let list = state.bookmarks;
-            if (state.activeFolderId !== 'all') list = list.filter(b => b.folderId === state.activeFolderId);
-            if (search) list = list.filter(b => b.title.toLowerCase().includes(search) || b.url.toLowerCase().includes(search));
-
-            // Update Label
-            const folderName = state.activeFolderId === 'all' ? 'All' : state.folders.find(f => f.id === state.activeFolderId)?.name;
-            document.getElementById('bm-folder-label').textContent = folderName;
-
-            if (list.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center text-zinc-600 py-10">No bookmarks found here.</div>`;
-                return;
-            }
-
-            list.forEach(bm => {
-                const domain = new URL(bm.url).hostname;
-                const favicon = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-
-                const card = document.createElement('div');
-                card.className = "bg-card border border-border p-4 rounded-xl hover:border-zinc-600 transition group flex flex-col h-36 relative";
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="w-10 h-10 rounded bg-zinc-800 flex items-center justify-center overflow-hidden">
-                            <img src="${favicon}" class="w-6 h-6 opacity-90">
-                        </div>
-                        <button onclick="deleteBookmark('${bm.id}')" class="text-zinc-600 hover:text-red-400 p-1 rounded hover:bg-zinc-800 transition md:opacity-0 md:group-hover:opacity-100">
-                            <i class="ph ph-trash"></i>
-                        </button>
-                    </div>
-                    <div class="flex-1 min-h-0 mb-2">
-                        <div class="font-bold text-sm text-white truncate">${bm.title}</div>
-                        <div class="text-xs text-textMuted truncate">${domain}</div>
-                    </div>
-                    <div class="flex gap-2">
-                         <a href="${bm.url}" target="_blank" class="flex-1 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-400 text-xs font-medium py-1.5 rounded text-center transition">
-                            Open
-                        </a>
-                        <button onclick="navigator.clipboard.writeText('${bm.url}'); showToast('Copied!')" class="px-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded transition">
-                            <i class="ph ph-copy"></i>
-                        </button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function deleteBookmark(id) {
-            if (confirm("Delete bookmark?")) {
-                state.bookmarks = state.bookmarks.filter(b => b.id !== id);
-                saveData();
-                renderBookmarks();
-            }
-        }
-
-        function updateView() {
-            document.getElementById('view-notes').classList.add('hidden');
-            document.getElementById('view-bookmarks').classList.add('hidden');
-            document.getElementById('view-empty').classList.add('hidden');
-
-            if (state.mode === 'notes') {
-                if (state.activeNoteId) {
-                    document.getElementById('view-notes').classList.remove('hidden');
-                    // Refresh editor when becoming visible is crucial for display
-                    if (easyMDE) setTimeout(() => easyMDE.codemirror.refresh(), 10);
-                } else {
-                    document.getElementById('view-empty').classList.remove('hidden');
-                }
-            } else {
-                document.getElementById('view-bookmarks').classList.remove('hidden');
-                renderBookmarks();
-            }
-        }
-
-        // --- IO ---
-
-        function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+        function resetData() { if (confirm("Wipe all data?")) { localStorage.removeItem(STORAGE_KEY); location.reload(); } }
 
         function loadData() {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (raw) state = JSON.parse(raw);
-            else {
-                state.folders = [{ id: 'f1', name: 'Ideas', type: 'notes' }];
-                state.notes = [];
-                saveData();
-            }
+            const r = localStorage.getItem(STORAGE_KEY);
+            if (r) state = JSON.parse(r);
+            else { state.folders = [{ id: '1', name: 'General', type: 'notes' }]; saveData(); }
         }
-
-        function exportAllData() {
-            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `fusionflow_backup_${new Date().toISOString().slice(0, 10)}.json`;
-            a.click();
+        function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+        function showToast(m) {
+            const c = document.getElementById('toast-container'); const e = document.createElement('div');
+            e.className = "bg-card border border-accent/50 text-white px-5 py-3 rounded-xl shadow-xl text-sm font-medium flex items-center gap-2 fade-in";
+            e.innerHTML = `<i class="ph-fill ph-check-circle text-accent"></i> ${m}`;
+            c.appendChild(e); setTimeout(() => e.remove(), 2500);
         }
-
-        function exportCurrentNote() {
-            if (!state.activeNoteId) return;
-            const note = state.notes.find(n => n.id === state.activeNoteId);
-            const blob = new Blob([note.content], { type: 'text/markdown' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `${note.title || 'untitled'}.md`;
-            a.click();
-        }
-
-        function triggerImport() { document.getElementById('importFile').click(); }
-
-        function handleImport(input) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const json = JSON.parse(e.target.result);
-                    if (json.notes && json.bookmarks) {
-                        state = json;
-                        saveData();
-                        location.reload();
-                    } else alert("Invalid format");
-                } catch (x) { alert("Error parsing file"); }
-            };
-            reader.readAsText(file);
-            input.value = '';
-        }
-
-        function resetData() {
-            if (confirm("Wipe all local data?")) {
-                localStorage.removeItem(STORAGE_KEY);
-                location.reload();
-            }
-        }
-
-        function showToast(msg) {
-            const container = document.getElementById('toast-container');
-            const t = document.createElement('div');
-            t.className = "bg-zinc-800 border border-zinc-700 text-white text-sm px-4 py-3 rounded-lg shadow-xl flex items-center gap-2 transform translate-y-10 opacity-0 transition-all duration-300";
-            t.innerHTML = `<i class="ph-fill ph-check-circle text-accent"></i> ${msg}`;
-            container.appendChild(t);
-
-            // Animate in
-            setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10);
-            // Remove
-            setTimeout(() => {
-                t.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => t.remove(), 300);
-            }, 2500);
-        }
-
     </script>
 </body>
 
