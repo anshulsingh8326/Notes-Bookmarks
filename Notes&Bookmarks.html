@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FusionFlow | Pro</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        bg: '#09090b',        // Zinc 950
+                        sidebar: '#121215',   // Zinc 925 (Custom)
+                        card: '#18181b',      // Zinc 900
+                        border: '#27272a',    // Zinc 800
+                        hover: '#27272a',
+                        accent: '#6366f1',    // Indigo 500
+                        accentHover: '#4f46e5',
+                        textMain: '#f4f4f5',  // Zinc 100
+                        textMuted: '#a1a1aa'  // Zinc 400
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* --- Base --- */
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+
+        /* --- Editor Customization --- */
+        .EasyMDEContainer {
+            background: transparent;
+            border: none;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-toolbar {
+            background: #09090b;
+            border: none;
+            border-bottom: 1px solid #27272a;
+            padding: 0 1rem;
+            opacity: 1;
+        }
+
+        .editor-toolbar button {
+            color: #a1a1aa !important;
+            border: none !important;
+            transition: all 0.2s;
+            border-radius: 6px !important;
+            margin-right: 2px !important;
+        }
+
+        .editor-toolbar button:hover {
+            background: #27272a !important;
+            color: #fff !important;
+        }
+
+        .editor-toolbar button.active {
+            background: #27272a !important;
+            color: #6366f1 !important;
+        }
+
+        .editor-toolbar i.separator {
+            border-right-color: #27272a;
+            border-left: none;
+        }
+
+        .CodeMirror {
+            background: #09090b;
+            color: #e4e4e7;
+            /* Zinc 200 */
+            border: none;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 16px;
+            /* Better for mobile reading */
+            line-height: 1.7;
+            padding: 20px;
+            height: 100%;
+        }
+
+        /* THE CURSOR FIX */
+        .CodeMirror-cursor {
+            border-left: 2px solid #6366f1 !important;
+            /* Indigo cursor */
+            border-right: none;
+            width: 0;
+        }
+
+        .editor-preview {
+            background: #09090b;
+            color: #e4e4e7;
+            padding: 20px;
+        }
+
+        .editor-statusbar {
+            display: none;
+        }
+
+        /* Hide status bar for cleaner look */
+
+        /* --- Drag & Drop UI --- */
+        .drop-target {
+            background-color: rgba(99, 102, 241, 0.15) !important;
+            border: 1px dashed #6366f1 !important;
+            color: #fff !important;
+        }
+
+        .dragging {
+            opacity: 0.5;
+        }
+
+        /* --- Utilities --- */
+        .glass {
+            background: rgba(24, 24, 27, 0.95);
+            backdrop-filter: blur(8px);
+        }
+
+        .mobile-sidebar-overlay {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-bg text-textMain h-[100dvh] flex flex-col md:flex-row overflow-hidden selection:bg-accent selection:text-white">
+
+    <header
+        class="md:hidden h-14 bg-sidebar border-b border-border flex items-center justify-between px-4 z-20 flex-shrink-0">
+        <button onclick="toggleSidebar()" class="text-textMuted hover:text-white p-2">
+            <i class="ph ph-list text-2xl"></i>
+        </button>
+        <span class="font-bold text-lg tracking-wide flex items-center gap-2">
+            <i class="ph-fill ph-hexagon text-accent"></i> FusionFlow
+        </span>
+        <button onclick="createItem()" class="bg-accent text-white p-2 rounded-lg shadow-lg shadow-indigo-500/20">
+            <i class="ph ph-plus-bold"></i>
+        </button>
+    </header>
+
+    <div id="sidebar-overlay" onclick="toggleSidebar()"
+        class="fixed inset-0 mobile-sidebar-overlay z-30 hidden md:hidden"></div>
+
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 w-[280px] bg-sidebar border-r border-border flex flex-col z-40 transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none">
+
+        <div class="hidden md:flex h-16 items-center px-6 border-b border-border">
+            <i class="ph-fill ph-hexagon text-accent text-2xl mr-2"></i>
+            <span class="font-bold text-lg tracking-wide text-white">FusionFlow</span>
+        </div>
+
+        <div class="p-4">
+            <div class="bg-bg p-1 rounded-lg border border-border flex">
+                <button onclick="switchMode('notes')" id="btn-mode-notes"
+                    class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md transition-all text-sm font-medium">
+                    <i class="ph ph-notebook"></i> Notes
+                </button>
+                <button onclick="switchMode('bookmarks')" id="btn-mode-bookmarks"
+                    class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md transition-all text-sm font-medium">
+                    <i class="ph ph-bookmarks"></i> Links
+                </button>
+            </div>
+        </div>
+
+        <div class="px-4 mb-2 flex gap-2">
+            <button onclick="createFolder()"
+                class="flex-1 bg-card hover:bg-hover text-textMuted hover:text-white py-2 rounded border border-border text-xs font-medium transition flex items-center justify-center gap-1.5">
+                <i class="ph ph-folder-plus text-sm"></i> Folder
+            </button>
+            <button onclick="createItem()"
+                class="hidden md:flex flex-1 bg-accent hover:bg-accentHover text-white py-2 rounded border border-transparent text-xs font-medium transition items-center justify-center gap-1.5 shadow-lg shadow-indigo-500/20">
+                <i class="ph ph-plus-bold text-sm"></i> New Item
+            </button>
+        </div>
+
+        <div id="sidebar-content" class="flex-1 overflow-y-auto px-3 py-2 space-y-1 pb-20">
+        </div>
+
+        <div class="p-4 border-t border-border bg-sidebar">
+            <div class="flex justify-between items-center text-textMuted px-2">
+                <div class="flex gap-4">
+                    <button onclick="triggerImport()" class="hover:text-white transition tooltip" title="Import">
+                        <i class="ph ph-upload-simple text-lg"></i>
+                    </button>
+                    <button onclick="exportAllData()" class="hover:text-white transition tooltip" title="Export All">
+                        <i class="ph ph-download-simple text-lg"></i>
+                    </button>
+                </div>
+                <button onclick="resetData()" class="hover:text-red-400 transition tooltip" title="Clear All">
+                    <i class="ph ph-trash text-lg"></i>
+                </button>
+            </div>
+            <input type="file" id="importFile" onchange="handleImport(this)" class="hidden">
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative bg-bg w-full">
+
+        <div id="view-notes" class="flex flex-col h-full w-full hidden">
+            <div
+                class="h-14 md:h-16 border-b border-border flex items-center justify-between px-4 md:px-8 bg-bg flex-shrink-0">
+                <input type="text" id="note-title" placeholder="Untitled Note"
+                    class="bg-transparent text-lg md:text-xl font-bold text-white focus:outline-none w-full placeholder-zinc-600 truncate"
+                    oninput="updateCurrentNoteTitle()">
+
+                <div class="flex gap-1 md:gap-3 ml-2 md:ml-4 flex-shrink-0">
+                    <span id="save-indicator"
+                        class="text-xs text-zinc-500 flex items-center mr-2 hidden md:flex">Saved</span>
+                    <button onclick="exportCurrentNote()"
+                        class="p-2 rounded-md hover:bg-hover text-textMuted hover:text-white transition">
+                        <i class="ph ph-file-md text-xl"></i>
+                    </button>
+                    <button onclick="deleteCurrentItem()"
+                        class="p-2 rounded-md hover:bg-red-500/10 text-textMuted hover:text-red-500 transition">
+                        <i class="ph ph-trash text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="flex-1 overflow-hidden relative">
+                <textarea id="md-editor"></textarea>
+            </div>
+        </div>
+
+        <div id="view-bookmarks" class="flex flex-col h-full w-full hidden bg-bg">
+            <div
+                class="h-14 md:h-16 border-b border-border flex items-center justify-between px-4 md:px-8 flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <h2 class="hidden md:block text-lg font-bold text-white">Bookmarks</h2>
+                    <span id="bm-folder-label"
+                        class="px-2 py-0.5 rounded bg-zinc-800 text-xs text-zinc-400 border border-zinc-700">All</span>
+                </div>
+
+                <div class="relative">
+                    <i
+                        class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
+                    <input type="text" id="bookmark-search" placeholder="Search..."
+                        class="bg-card border border-border text-sm rounded-full pl-9 pr-4 py-1.5 focus:outline-none focus:border-accent text-white w-40 md:w-64 placeholder-zinc-600 transition-all"
+                        oninput="renderBookmarks()">
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 md:p-8">
+                <div id="bookmarks-grid"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
+                </div>
+            </div>
+        </div>
+
+        <div id="view-empty"
+            class="flex flex-col h-full w-full items-center justify-center text-zinc-600 p-4 text-center">
+            <div
+                class="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mb-6 border border-zinc-800">
+                <i class="ph ph-pencil-simple-slash text-4xl opacity-50"></i>
+            </div>
+            <h3 class="text-white font-medium text-lg mb-2">No Note Selected</h3>
+            <p class="text-sm max-w-xs mx-auto">Select a note from the sidebar or create a new one to get started.</p>
+            <button onclick="createItem()"
+                class="mt-6 px-6 py-2 bg-accent hover:bg-accentHover text-white rounded-full text-sm font-medium transition shadow-lg shadow-indigo-500/20 md:hidden">
+                Create New
+            </button>
+        </div>
+
+    </main>
+
+    <div id="modal-overlay" class="fixed inset-0 z-[60] hidden items-center justify-center mobile-sidebar-overlay p-4">
+        <div id="modal-bookmark"
+            class="bg-[#18181b] border border-border p-6 rounded-2xl w-full max-w-md shadow-2xl transform scale-95 opacity-0 transition-all duration-200">
+            <h3 class="text-lg font-bold mb-6 text-white flex items-center gap-2">
+                <i class="ph-fill ph-bookmark-simple text-accent"></i> Add Bookmark
+            </h3>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-zinc-500 mb-1 ml-1">TITLE</label>
+                    <input type="text" id="bm-title"
+                        class="w-full bg-bg border border-border p-3 rounded-lg text-sm focus:border-accent outline-none text-white placeholder-zinc-700"
+                        placeholder="e.g. My Portfolio">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-zinc-500 mb-1 ml-1">URL</label>
+                    <input type="url" id="bm-url"
+                        class="w-full bg-bg border border-border p-3 rounded-lg text-sm focus:border-accent outline-none text-white placeholder-zinc-700"
+                        placeholder="https://example.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-zinc-500 mb-1 ml-1">FOLDER</label>
+                    <select id="bm-folder"
+                        class="w-full bg-bg border border-border p-3 rounded-lg text-sm focus:border-accent outline-none text-white appearance-none">
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-8">
+                <button onclick="closeModals()"
+                    class="px-4 py-2 text-sm text-textMuted hover:text-white font-medium">Cancel</button>
+                <button onclick="saveNewBookmark()"
+                    class="px-6 py-2 text-sm bg-accent hover:bg-accentHover text-white rounded-lg font-medium shadow-lg shadow-indigo-500/20">Save
+                    Bookmark</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"
+        class="fixed bottom-6 right-6 md:bottom-8 md:right-8 flex flex-col gap-2 z-[70] pointer-events-none"></div>
+
+    <script>
+        // --- State ---
+        const STORAGE_KEY = 'fusionflow_pro_v1';
+        let easyMDE;
+
+        let state = {
+            mode: 'notes',
+            folders: [],
+            notes: [],
+            bookmarks: [],
+            activeNoteId: null,
+            activeFolderId: 'all'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            initEditor();
+            renderSidebar();
+            updateView();
+
+            // Mobile drag blocking prevent
+            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+        });
+
+        function initEditor() {
+            easyMDE = new EasyMDE({
+                element: document.getElementById('md-editor'),
+                spellChecker: false,
+                status: false,
+                placeholder: "Start typing your note here...",
+                toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'code', '|', 'fullscreen', 'side-by-side'],
+                theme: "dark",
+                autoDownloadFontAwesome: false // Using Phosphor instead
+            });
+
+            easyMDE.codemirror.on("change", () => {
+                if (state.activeNoteId) {
+                    const note = state.notes.find(n => n.id === state.activeNoteId);
+                    if (note) {
+                        note.content = easyMDE.value();
+                        note.updatedAt = Date.now();
+                        saveData();
+                        document.getElementById('save-indicator').textContent = 'Saving...';
+                        setTimeout(() => document.getElementById('save-indicator').textContent = 'Saved', 500);
+                    }
+                }
+            });
+        }
+
+        // --- Logic ---
+
+        function switchMode(mode) {
+            state.mode = mode;
+            state.activeFolderId = 'all';
+            state.activeNoteId = null;
+            toggleSidebar(false); // Close sidebar on mobile after switch
+
+            const btnNotes = document.getElementById('btn-mode-notes');
+            const btnBm = document.getElementById('btn-mode-bookmarks');
+
+            const activeClass = ['bg-accent', 'text-white', 'shadow-lg', 'shadow-indigo-500/20'];
+            const inactiveClass = ['hover:bg-hover', 'text-textMuted'];
+
+            if (mode === 'notes') {
+                btnNotes.classList.add(...activeClass);
+                btnNotes.classList.remove(...inactiveClass);
+                btnBm.classList.remove(...activeClass);
+                btnBm.classList.add(...inactiveClass);
+            } else {
+                btnBm.classList.add(...activeClass);
+                btnBm.classList.remove(...inactiveClass);
+                btnNotes.classList.remove(...activeClass);
+                btnNotes.classList.add(...inactiveClass);
+            }
+
+            renderSidebar();
+            updateView();
+        }
+
+        function toggleSidebar(force) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            const shouldOpen = force !== undefined ? force : isClosed;
+
+            if (shouldOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // --- Sidebar & Drag Drop ---
+
+        function renderSidebar() {
+            const container = document.getElementById('sidebar-content');
+            container.innerHTML = '';
+
+            // 1. "All" Folder
+            const allDiv = document.createElement('div');
+            allDiv.className = `mb-2 px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 text-sm font-medium transition ${state.activeFolderId === 'all' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'}`;
+            allDiv.innerHTML = `<i class="ph-fill ph-stack text-lg"></i> All ${state.mode === 'notes' ? 'Notes' : 'Bookmarks'}`;
+            allDiv.onclick = () => {
+                state.activeFolderId = 'all';
+                renderSidebar();
+                if (state.mode === 'bookmarks') renderBookmarks();
+                toggleSidebar(false);
+            };
+            // Drop target for "All" (removes folder assignment)
+            setupDropTarget(allDiv, null);
+            container.appendChild(allDiv);
+
+            // 2. Dynamic Folders
+            const modeFolders = state.folders.filter(f => f.type === state.mode);
+
+            if (modeFolders.length > 0) {
+                const folderLabel = document.createElement('div');
+                folderLabel.className = "px-3 mt-4 mb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-600";
+                folderLabel.textContent = "Folders";
+                container.appendChild(folderLabel);
+            }
+
+            modeFolders.forEach(folder => {
+                const folderEl = document.createElement('div');
+                folderEl.className = "group mb-1";
+
+                const header = document.createElement('div');
+                header.className = `px-3 py-2 rounded-lg cursor-pointer flex items-center justify-between text-sm font-medium transition ${state.activeFolderId === folder.id ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'}`;
+                header.onclick = () => {
+                    state.activeFolderId = folder.id;
+                    renderSidebar();
+                    if (state.mode === 'bookmarks') renderBookmarks();
+                    toggleSidebar(false);
+                };
+
+                header.innerHTML = `
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <i class="ph-fill ph-folder text-lg ${state.activeFolderId === folder.id ? 'text-accent' : 'text-zinc-600'}"></i>
+                        <span class="truncate">${folder.name}</span>
+                    </div>
+                    <button class="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 transition" onclick="event.stopPropagation(); deleteFolder('${folder.id}')">
+                        <i class="ph ph-x"></i>
+                    </button>
+                `;
+
+                setupDropTarget(header, folder.id);
+                folderEl.appendChild(header);
+
+                // Notes inside folder
+                if (state.mode === 'notes') {
+                    const notesInFolder = state.notes.filter(n => n.folderId === folder.id);
+                    if (notesInFolder.length > 0) {
+                        const list = document.createElement('div');
+                        list.className = "ml-4 pl-3 border-l border-zinc-800 mt-1 space-y-0.5";
+
+                        notesInFolder.forEach(note => {
+                            const noteEl = createNoteSidebarItem(note);
+                            list.appendChild(noteEl);
+                        });
+                        folderEl.appendChild(list);
+                    }
+                }
+
+                container.appendChild(folderEl);
+            });
+
+            // 3. Unorganized Notes (if in All mode or showing explicitly)
+            if (state.mode === 'notes') {
+                const unorganized = state.notes.filter(n => !n.folderId);
+                if (unorganized.length > 0) {
+                    const unLabel = document.createElement('div');
+                    unLabel.className = "px-3 mt-4 mb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-600";
+                    unLabel.textContent = "Unsorted";
+                    container.appendChild(unLabel);
+
+                    unorganized.forEach(note => {
+                        const noteEl = createNoteSidebarItem(note);
+                        container.appendChild(noteEl);
+                    });
+                }
+            }
+        }
+
+        function createNoteSidebarItem(note) {
+            const el = document.createElement('div');
+            el.draggable = true;
+            el.className = `px-3 py-2 rounded-md cursor-pointer text-xs truncate transition border border-transparent ${state.activeNoteId === note.id ? 'bg-accent/10 text-accent border-accent/20 font-medium' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'}`;
+            el.textContent = note.title || 'Untitled Note';
+            el.onclick = () => { loadNote(note.id); toggleSidebar(false); };
+
+            // Drag Events
+            el.ondragstart = (e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'note', id: note.id }));
+                el.classList.add('dragging');
+            };
+            el.ondragend = () => {
+                el.classList.remove('dragging');
+                document.querySelectorAll('.drop-target').forEach(dt => dt.classList.remove('drop-target'));
+            };
+
+            return el;
+        }
+
+        function setupDropTarget(element, targetFolderId) {
+            element.ondragover = (e) => {
+                e.preventDefault(); // Essential
+                e.dataTransfer.dropEffect = 'move';
+                element.classList.add('drop-target');
+            };
+            element.ondragleave = () => {
+                element.classList.remove('drop-target');
+            };
+            element.ondrop = (e) => {
+                e.preventDefault();
+                element.classList.remove('drop-target');
+                const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+
+                if (data.type === 'note' && state.mode === 'notes') {
+                    const note = state.notes.find(n => n.id === data.id);
+                    if (note) {
+                        note.folderId = targetFolderId;
+                        saveData();
+                        renderSidebar();
+                        showToast(`Moved to ${targetFolderId ? 'folder' : 'All Notes'}`);
+                    }
+                }
+            };
+        }
+
+        // --- CRUD ---
+
+        function createItem() {
+            if (state.mode === 'notes') {
+                const newNote = {
+                    id: Date.now().toString(36),
+                    folderId: state.activeFolderId === 'all' ? null : state.activeFolderId,
+                    title: '',
+                    content: '',
+                    updatedAt: Date.now()
+                };
+                state.notes.push(newNote);
+                loadNote(newNote.id);
+                saveData();
+                renderSidebar();
+
+                // Focus title
+                setTimeout(() => document.getElementById('note-title').focus(), 100);
+                toggleSidebar(false);
+            } else {
+                openModal();
+            }
+        }
+
+        function createFolder() {
+            const name = prompt("New Folder Name:");
+            if (!name) return;
+            state.folders.push({ id: Date.now().toString(), name, type: state.mode });
+            saveData();
+            renderSidebar();
+        }
+
+        function loadNote(id) {
+            state.activeNoteId = id;
+            const note = state.notes.find(n => n.id === id);
+            if (note) {
+                document.getElementById('note-title').value = note.title;
+                // Set value only if different to avoid cursor jump (though with load usually we want jump to start)
+                if (easyMDE.value() !== note.content) {
+                    easyMDE.value(note.content);
+                }
+                // Force refresh layout for CodeMirror
+                setTimeout(() => easyMDE.codemirror.refresh(), 10);
+            }
+            updateView();
+            renderSidebar();
+        }
+
+        function updateCurrentNoteTitle() {
+            const note = state.notes.find(n => n.id === state.activeNoteId);
+            if (note) {
+                note.title = document.getElementById('note-title').value;
+                saveData();
+                // Debounced sidebar update to prevent flickering while typing title
+                clearTimeout(window.titleDebounce);
+                window.titleDebounce = setTimeout(renderSidebar, 500);
+            }
+        }
+
+        function deleteCurrentItem() {
+            if (state.activeNoteId) {
+                if (confirm("Delete this note permanently?")) {
+                    state.notes = state.notes.filter(n => n.id !== state.activeNoteId);
+                    state.activeNoteId = null;
+                    saveData();
+                    updateView();
+                    renderSidebar();
+                }
+            }
+        }
+
+        function deleteFolder(id) {
+            if (confirm("Delete folder? Notes inside will become unsorted.")) {
+                state.folders = state.folders.filter(f => f.id !== id);
+                // Reset notes in this folder to null (Unsorted)
+                if (state.mode === 'notes') {
+                    state.notes.forEach(n => { if (n.folderId === id) n.folderId = null; });
+                } else {
+                    state.bookmarks.forEach(b => { if (b.folderId === id) b.folderId = null; });
+                }
+                state.activeFolderId = 'all';
+                saveData();
+                renderSidebar();
+                updateView(); // Refresh bookmark grid if open
+            }
+        }
+
+        // --- Bookmarks ---
+
+        function openModal() {
+            const modal = document.getElementById('modal-bookmark');
+            const overlay = document.getElementById('modal-overlay');
+            const container = modal.parentElement;
+
+            container.classList.remove('hidden');
+            container.classList.add('flex');
+
+            // Animation
+            setTimeout(() => {
+                modal.classList.remove('scale-95', 'opacity-0');
+                modal.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            // Populate Select
+            const select = document.getElementById('bm-folder');
+            select.innerHTML = '<option value="">No Folder</option>';
+            state.folders.filter(f => f.type === 'bookmarks').forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f.id;
+                opt.textContent = f.name;
+                if (state.activeFolderId === f.id) opt.selected = true;
+                select.appendChild(opt);
+            });
+
+            document.getElementById('bm-title').value = '';
+            document.getElementById('bm-url').value = '';
+            document.getElementById('bm-title').focus();
+        }
+
+        function closeModals() {
+            const modal = document.getElementById('modal-bookmark');
+            modal.classList.remove('scale-100', 'opacity-100');
+            modal.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.parentElement.classList.add('hidden');
+                modal.parentElement.classList.remove('flex');
+            }, 200);
+        }
+
+        function saveNewBookmark() {
+            const title = document.getElementById('bm-title').value;
+            let url = document.getElementById('bm-url').value;
+            const folderId = document.getElementById('bm-folder').value;
+
+            if (!title || !url) return showToast("Please fill required fields");
+            if (!url.startsWith('http')) url = 'https://' + url;
+
+            state.bookmarks.push({
+                id: Date.now().toString(36),
+                title, url, folderId: folderId || null, createdAt: Date.now()
+            });
+            saveData();
+            closeModals();
+            renderBookmarks();
+            showToast("Bookmark Added");
+        }
+
+        function renderBookmarks() {
+            const grid = document.getElementById('bookmarks-grid');
+            grid.innerHTML = '';
+            const search = document.getElementById('bookmark-search').value.toLowerCase();
+
+            // Filter
+            let list = state.bookmarks;
+            if (state.activeFolderId !== 'all') list = list.filter(b => b.folderId === state.activeFolderId);
+            if (search) list = list.filter(b => b.title.toLowerCase().includes(search) || b.url.toLowerCase().includes(search));
+
+            // Update Label
+            const folderName = state.activeFolderId === 'all' ? 'All' : state.folders.find(f => f.id === state.activeFolderId)?.name;
+            document.getElementById('bm-folder-label').textContent = folderName;
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center text-zinc-600 py-10">No bookmarks found here.</div>`;
+                return;
+            }
+
+            list.forEach(bm => {
+                const domain = new URL(bm.url).hostname;
+                const favicon = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+                const card = document.createElement('div');
+                card.className = "bg-card border border-border p-4 rounded-xl hover:border-zinc-600 transition group flex flex-col h-36 relative";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="w-10 h-10 rounded bg-zinc-800 flex items-center justify-center overflow-hidden">
+                            <img src="${favicon}" class="w-6 h-6 opacity-90">
+                        </div>
+                        <button onclick="deleteBookmark('${bm.id}')" class="text-zinc-600 hover:text-red-400 p-1 rounded hover:bg-zinc-800 transition md:opacity-0 md:group-hover:opacity-100">
+                            <i class="ph ph-trash"></i>
+                        </button>
+                    </div>
+                    <div class="flex-1 min-h-0 mb-2">
+                        <div class="font-bold text-sm text-white truncate">${bm.title}</div>
+                        <div class="text-xs text-textMuted truncate">${domain}</div>
+                    </div>
+                    <div class="flex gap-2">
+                         <a href="${bm.url}" target="_blank" class="flex-1 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-400 text-xs font-medium py-1.5 rounded text-center transition">
+                            Open
+                        </a>
+                        <button onclick="navigator.clipboard.writeText('${bm.url}'); showToast('Copied!')" class="px-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded transition">
+                            <i class="ph ph-copy"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function deleteBookmark(id) {
+            if (confirm("Delete bookmark?")) {
+                state.bookmarks = state.bookmarks.filter(b => b.id !== id);
+                saveData();
+                renderBookmarks();
+            }
+        }
+
+        function updateView() {
+            document.getElementById('view-notes').classList.add('hidden');
+            document.getElementById('view-bookmarks').classList.add('hidden');
+            document.getElementById('view-empty').classList.add('hidden');
+
+            if (state.mode === 'notes') {
+                if (state.activeNoteId) {
+                    document.getElementById('view-notes').classList.remove('hidden');
+                    // Refresh editor when becoming visible is crucial for display
+                    if (easyMDE) setTimeout(() => easyMDE.codemirror.refresh(), 10);
+                } else {
+                    document.getElementById('view-empty').classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('view-bookmarks').classList.remove('hidden');
+                renderBookmarks();
+            }
+        }
+
+        // --- IO ---
+
+        function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+        function loadData() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) state = JSON.parse(raw);
+            else {
+                state.folders = [{ id: 'f1', name: 'Ideas', type: 'notes' }];
+                state.notes = [];
+                saveData();
+            }
+        }
+
+        function exportAllData() {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fusionflow_backup_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+        }
+
+        function exportCurrentNote() {
+            if (!state.activeNoteId) return;
+            const note = state.notes.find(n => n.id === state.activeNoteId);
+            const blob = new Blob([note.content], { type: 'text/markdown' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${note.title || 'untitled'}.md`;
+            a.click();
+        }
+
+        function triggerImport() { document.getElementById('importFile').click(); }
+
+        function handleImport(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const json = JSON.parse(e.target.result);
+                    if (json.notes && json.bookmarks) {
+                        state = json;
+                        saveData();
+                        location.reload();
+                    } else alert("Invalid format");
+                } catch (x) { alert("Error parsing file"); }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        function resetData() {
+            if (confirm("Wipe all local data?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = "bg-zinc-800 border border-zinc-700 text-white text-sm px-4 py-3 rounded-lg shadow-xl flex items-center gap-2 transform translate-y-10 opacity-0 transition-all duration-300";
+            t.innerHTML = `<i class="ph-fill ph-check-circle text-accent"></i> ${msg}`;
+            container.appendChild(t);
+
+            // Animate in
+            setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10);
+            // Remove
+            setTimeout(() => {
+                t.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => t.remove(), 300);
+            }, 2500);
+        }
+
+    </script>
+</body>
+
+</html>
